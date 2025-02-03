@@ -24,43 +24,21 @@ jobs:
           node-version: 18
           registry-url: "https://registry.npmjs.org/"
 
-      - name: Ensure NPM Access
-        run: npm whoami --registry https://registry.npmjs.org/
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_PACKAGES_HANDLER }}
-
-      - name: Configure Git User
-        run: |
-          git config --global user.name "@hellcat29a"
-          git config --global user.email "bhiri22@gmail.com@users.noreply.github.com"
-
       - name: Install Dependencies
         run: npm install --f
 
       - name: Build Project
-        run: npm run build
+        run: npx turbo run build --filter=@hellcat29a/angular-file-uploader
 
-      - name: List Build Output
+      - name: Debug Build Output
         run: |
           pwd
-          ls -R dist
+          find . -name "dist" -type d
+          ls -R packages/angular-file-uploader/dist
 
-      - name: Create ~/.npmrc file
+      - name: Publish Package
         run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PACKAGES_HANDLER }}" > ~/.npmrc
-
-      - name: Publish Package from Dist Directory
-        run: |
-          cd dist/angular-file-uploader
+          cd packages/angular-file-uploader/dist
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PACKAGES_HANDLER }}
-
-      - name: Stage package-lock.json
-        run: git add package-lock.json
-
-      - name: Commit changes
-        run: |
-          git config --global user.email "bhiri22@gmail.com"
-          git config --global user.name "@hellcat29a"
-          git commit -m "fix: commit package-lock.json changes" || echo "No changes to commit"
