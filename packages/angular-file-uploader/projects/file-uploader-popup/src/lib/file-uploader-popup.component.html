@@ -1,0 +1,96 @@
+<div class="popup-overlay" (click)="closePopup()">
+    <div class="popup-content" (click)="$event.stopPropagation()">
+      <div class="popup-header">
+        <h2 class="header-title">Select Image</h2>
+        <div class="header-actions">
+          <input
+            type="file"
+            #fileInput
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            style="display: none"
+          />
+          <button class="upload-button" (click)="fileInput.click()">
+            + Upload
+          </button>
+          <button class="close-button" (click)="closePopup()">×</button>
+        </div>
+      </div>
+  
+      <div class="main-content">
+        <!-- Left side: Image grid -->
+        <div class="images-section">
+          <div class="image-grid">
+            <div
+              role="presentation"
+              *ngFor="let image of images"
+              class="image-item selected"
+              (click)="selectImage(image)"
+              (onKeyPress)="selectImage(image)"
+              [class.selected]="selectedImage === image"
+            >
+              <img [src]="image.url" [alt]="image.name" class="single-image" />
+              <div class="image-name">{{ image.name }}</div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Right side: Selected image details -->
+        <div class="details-section">
+          <div class="image-data">
+            <div class="selected-preview">
+              <img
+                *ngIf="selectedImage"
+                [src]="selectedImage?.url"
+                alt="Selected preview"
+              />
+              <div class="no-image-text" *ngIf="!selectedImage">
+                <span>No Image Selected</span>
+              </div>
+            </div>
+            <div class="image-details-flex">
+              <button
+                *ngIf="selectedImage"
+                (click)="deleteImage(selectedImage.id)"
+                class="delete-button"
+              >
+                Delete
+              </button>
+  
+              <div class="image-details">
+                <div class="detail-item">
+                  <span class="label">Size:</span>
+                  <span>{{ selectedImage?.size }}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">URL:</span>
+                  <span>{{ selectedImage?.url }}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Name:</span>
+                  <span>{{ selectedImage?.name }}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Created:</span>
+                  <span>{{ selectedImage?.createdAt | date }}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Updated:</span>
+                  <span>{{ selectedImage?.updatedAt | date }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <button
+            class="select-button"
+            (click)="confirmSelection()"
+            [disabled]="!selectedImage"
+          >
+            Select
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
