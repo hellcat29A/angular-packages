@@ -34,11 +34,11 @@ jobs:
         run: |
           pwd
           find . -name "dist" -type d
-          ls -R packages/angular-file-uploader/dist
+          ls -R packages/angular-file-uploader/dist/file-uploader-popup
 
       - name: Publish Package
         run: |
-          cd packages/angular-file-uploader/dist
+          cd packages/angular-file-uploader/dist/file-uploader-popup
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PACKAGES_HANDLER }}
